@@ -62,3 +62,9 @@ If you discover a security vulnerability within Laravel, please send an e-mail t
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+## jetstream 
+
+composer require laravel/jetstream:^2.1
+php artisan jetstream:install livewire
+npm install && npm run dev
