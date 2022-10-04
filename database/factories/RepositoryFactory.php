@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 class RepositoryFactory extends Factory
 {
     /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = Repository::class;
+
+    /**
      * Define the model's default state.
      *
      * @return array
@@ -16,7 +23,9 @@ class RepositoryFactory extends Factory
     public function definition()
     {
         return [
-            'user_id'=> User::factory()
+            'user_id' => User::factory(),
+            'url' => $this->faker->url,
+            'description' => $this->faker->text,
         ];
     }
 }
