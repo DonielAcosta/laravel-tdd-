@@ -101,21 +101,30 @@ class RepositoryControllerTest extends TestCase
             ->assertSessionHasErrors(['url', 'description']);
     }
 
-    public function test_destroy()
-    {
-        $repository = Repository::factory()->create();
+    public function test_destroy(){
 
-        $user = User::factory()->create();
+      $user = User::factory()->create();
+      $repository = Repository::factory()->create(['user_id'=> $user->id]);
 
-        $this
-            ->actingAs($user)
-            ->delete("repositories/$repository->id")
-            ->assertRedirect('repositories');
+      $this
+          ->actingAs($user)
+          ->delete("repositories/$repository->id")
+          ->assertRedirect('repositories');
 
-        $this->assertDatabaseMissing('repositories', [
-            'id' => $repository->id,
-            'url' => $repository->url,
-            'description' => $repository->description,
-        ]);
+      $this->assertDatabaseMissing('repositories', [
+          'id' => $repository->id,
+          'url' => $repository->url,
+          'description' => $repository->description,
+      ]);
+    }
+
+    public function test_destroy_policy(){
+
+      $user = User::factory()->create();
+      $repository = Repository::factory()->create();
+      $this
+          ->actingAs($user)
+          ->delete("repositories/$repository->id")
+          ->assertStatus(403);
     }
   }
