@@ -12,6 +12,13 @@ class RepositoryController extends Controller{
       'repositories' => $request->user()->repositories
     ]);
   }
+  public function show(Request $request, Repository $repository){
+      if ($request->user()->id != $repository->user_id) {
+          abort(403);
+      }
+
+      return view('repositories.show', compact('repository'));
+  }
   public function store(Request $request){
     
     $request->validate([
