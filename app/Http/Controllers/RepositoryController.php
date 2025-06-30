@@ -4,14 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\Repository;
 use Illuminate\Http\Request;
+use App\http\Requests\RepositoryRequest;
 
 class RepositoryController extends Controller{
 
-  public function index(Request $request){
-    return view('repositories.index', [
-      'repositories' => $request->user()->repositories
-    ]);
+  public function index(Request $request)
+  {
+      $user = $request->user();
+  
+      // Si no hay usuario logueado, retorna colección vacía
+      $repositories = $user ? $user->repositories : collect();
+  
+      return view('repositories.index', compact('repositories'));
   }
+  
   public function show(Request $request, Repository $repository){
       if ($request->user()->id != $repository->user_id) {
           abort(403);
@@ -32,24 +38,16 @@ class RepositoryController extends Controller{
     return view('repositories.create');
   }
 
-  public function store(Request $request){
+  public function store(RepositoryRequest $request){
 
-    $request->validate([
-        'url' => 'required',
-        'description' => 'required',
-    ]);
 
     $request->user()->repositories()->create($request->all());
 
     return redirect()->route('repositories.index');
   }
 
-  public function update(Request $request, Repository $repository){
+  public function update(RepositoryRequest $request, Repository $repository){
 
-    $request->validate([
-        'url' => 'required',
-        'description' => 'required',
-    ]);
 
     $repository->update($request->all());
     if($request->user()->id != $repository->user_id){
